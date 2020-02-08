@@ -17,6 +17,7 @@ b.  2-stage catchment area method (demand-adjusted supply) is calculates as foll
 *You can also apply distance decay weights to discount capacity of providers that are further away from family i.   
 *You can calculate demand-adjusted supply for certain types or rating levels as need for the study objective.
 */
+
 *define working directory 
 global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\
 

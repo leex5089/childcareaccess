@@ -15,12 +15,16 @@
 Using the density information, each synthetic family points can have race and income status assigned to them (or depending on your need, you can select
 variables of your interest from ACS data).*/
 
+*define working directory 
+global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\
+
+
 clear all
 
 *============================================================================================================*    
 *Step 1: using tract level ACS data, calculate joint density of family by categorical-poverty status, by race*
 *============================================================================================================* 
-import delimited "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\nhgis0110_ds216_20155_2015_tract.csv", clear //data extracted from https://www.nhgis.org/
+import delimited "${directory}\nhgis0110_ds216_20155_2015_tract.csv", clear //data extracted from https://www.nhgis.org/
 drop if statea !=27 //keep the state you want (27 is MN)
 egen total_families=total( ad42e001 ) //  counts of total number of families in the state
 egen total_families_u5=rowtotal(ad2ne005 ad2ne006 ad2ne012 ad2ne013  ad2ne018 ad2ne019 ad2ne025 ad2ne026 ad2ne032 ad2ne033 ad2ne038 ad2ne039 ad2ne045 ad2ne046 ad2ne052 ad2ne053  ad2ne058 ad2ne059  ad2ne065 ad2ne066 ad2ne072 ad2ne073 ad2ne078 ad2ne079) //count of families with children under age 5 in each CT.
@@ -77,35 +81,35 @@ egen tt=rowtotal(u5YesPovBelow_race1 u5YesPovAbove_race1 u5YesPovBelow_race2 u5Y
 egen u5povbelow_all=rowtotal(u5YesPovBelow_race*)
 egen u5povabove_all=rowtotal(u5YesPovAbove_race*)
 forval i=1/6{
-	gen s_u5povbelow_race`i'= u5YesPovBelow_race`i'/u5povbelow_all  
-	gen s_u5povabove_race`i'= u5YesPovAbove_race`i'/u5povabove_all
+  gen s_u5povbelow_race`i'= u5YesPovBelow_race`i'/u5povbelow_all  
+  gen s_u5povabove_race`i'= u5YesPovAbove_race`i'/u5povabove_all
 }
 gen s_u5povbelow_all= u5povbelow_all/tt
 gen s_u5povabove_all= u5povabove_all/tt
 
 forval i=1/6{
-	gen s_fam_u5_race`i'=(u5YesPovBelow_race`i'+u5YesPovAbove_race`i')/tt
+  gen s_fam_u5_race`i'=(u5YesPovBelow_race`i'+u5YesPovAbove_race`i')/tt
 }
 forval i=1/6{
-	gen n_fam_u5_race`i'= u5YesPovBelow_race`i'+u5YesPovAbove_race`i'
+  gen n_fam_u5_race`i'= u5YesPovBelow_race`i'+u5YesPovAbove_race`i'
 }
 forval i=1/6{
-	egen state_n_fam_u5_race`i'= total(n_fam_u5_race`i')
+  egen state_n_fam_u5_race`i'= total(n_fam_u5_race`i')
 }
 egen sum=rowtotal(state_n_fam_u5_race*)
  
 forval i=1/6{
-	gen s_state_n_fam_u5_race`i'= state_n_fam_u5_race`i'/sum
+  gen s_state_n_fam_u5_race`i'= state_n_fam_u5_race`i'/sum
 }
 
 *total families with kid u 5 by race.
 forval i=1/6{
-	egen total_pop_race`i'=rowtotal(u5YesPovBelow_race`i' u5YesPovAbove_race`i')
+  egen total_pop_race`i'=rowtotal(u5YesPovBelow_race`i' u5YesPovAbove_race`i')
 }
 
 forval i=1/6{
-	gen s_u5YesPovBelow_race`i'=u5YesPovBelow_race`i'/total_pop_race`i'
-	gen s_u5YesPovAbove_race`i'=u5YesPovAbove_race`i'/total_pop_race`i'
+  gen s_u5YesPovBelow_race`i'=u5YesPovBelow_race`i'/total_pop_race`i'
+  gen s_u5YesPovAbove_race`i'=u5YesPovAbove_race`i'/total_pop_race`i'
 }
 
 sum s_u5YesPovBelow_race* //just check to see if share make sense
@@ -129,34 +133,34 @@ gen  s_pov12_race=ad2re013/alt_u5YesPovAbove_race
 
  
 forval i=1/6{
-	gen s_pov1_race`i'=s_pov1_race*s_u5YesPovBelow_race`i'
-	gen s_pov2_race`i'=s_pov2_race*s_u5YesPovBelow_race`i'
-	gen s_pov3_race`i'=s_pov3_race*s_u5YesPovBelow_race`i'
-	gen s_pov4_race`i'=s_pov4_race*s_u5YesPovAbove_race`i'
-	gen s_pov5_race`i'=s_pov5_race*s_u5YesPovAbove_race`i'
-	gen s_pov6_race`i'=s_pov6_race*s_u5YesPovAbove_race`i'
-	gen s_pov7_race`i'=s_pov7_race*s_u5YesPovAbove_race`i'
-	gen s_pov8_race`i'=s_pov8_race*s_u5YesPovAbove_race`i'
-	gen s_pov9_race`i'=s_pov9_race*s_u5YesPovAbove_race`i'
-	gen s_pov10_race`i'=s_pov10_race*s_u5YesPovAbove_race`i'
-	gen s_pov11_race`i'=s_pov11_race*s_u5YesPovAbove_race`i'
-	gen s_pov12_race`i'=s_pov12_race*s_u5YesPovAbove_race`i'
+  gen s_pov1_race`i'=s_pov1_race*s_u5YesPovBelow_race`i'
+  gen s_pov2_race`i'=s_pov2_race*s_u5YesPovBelow_race`i'
+  gen s_pov3_race`i'=s_pov3_race*s_u5YesPovBelow_race`i'
+  gen s_pov4_race`i'=s_pov4_race*s_u5YesPovAbove_race`i'
+  gen s_pov5_race`i'=s_pov5_race*s_u5YesPovAbove_race`i'
+  gen s_pov6_race`i'=s_pov6_race*s_u5YesPovAbove_race`i'
+  gen s_pov7_race`i'=s_pov7_race*s_u5YesPovAbove_race`i'
+  gen s_pov8_race`i'=s_pov8_race*s_u5YesPovAbove_race`i'
+  gen s_pov9_race`i'=s_pov9_race*s_u5YesPovAbove_race`i'
+  gen s_pov10_race`i'=s_pov10_race*s_u5YesPovAbove_race`i'
+  gen s_pov11_race`i'=s_pov11_race*s_u5YesPovAbove_race`i'
+  gen s_pov12_race`i'=s_pov12_race*s_u5YesPovAbove_race`i'
 }
 *keep the variables in need only
 keep gisjoin year state  s_pov*_race county tracta   s_pov*_race*  total_families_u5 s_fam_u5_race* s_u5YesPovBelow_race* s_u5YesPovAbove_race* s_u5povbelow_race* s_u5povabove_race*
 foreach var of varlist _all{
-	rename `var' ct_`var' //add ct_ prefix to all variables to indicate that it comes from tract level data.
+  rename `var' ct_`var' //add ct_ prefix to all variables to indicate that it comes from tract level data.
 }
 tostring ct_tracta,gen(ct_tracta_s)
 gen uid=ct_county+ct_tracta_s // unique identifier
-save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015CTb_race.dta",replace
+save "${directory}\intermediate\ACS2011_2015CTb_race.dta",replace
  
  
 *====================================================================================================*    
 *Step 2: using block-group level ACS data, calculate joint density of family by binary-poverty status*
 *====================================================================================================*    
  
-import delimited "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\nhgis0110_ds215_20155_2015_blck_grp.csv", clear
+import delimited "${directory}\nhgis0110_ds215_20155_2015_blck_grp.csv", clear
 drop if statea !=27 //keep the state you want (27 is MN)
 *families at/above poverty by num of children
 *families with children under 5
@@ -173,11 +177,11 @@ egen u5YesPovAbove_all=rowtotal(adnfe025 adnfe026 adnfe032 adnfe033 adnfe038 adn
 
 keep gisjoin tracta county total_families_u5 grand_total_families_u5 u5YesPovBelow_all u5YesPovAbove_all
 foreach var of varlist _all{
-	rename `var' bg_`var'  //add bg_ prefix to all variables to indicate that it comes from block-group level data.
+  rename `var' bg_`var'  //add bg_ prefix to all variables to indicate that it comes from block-group level data.
 }
 tostring bg_tracta,gen(bg_tracta_s)
 gen uid=bg_county+bg_tracta_s // unique identifier
-save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group.dta",replace
+save "${directory}\intermediate\ACS2011_2015Block_Group.dta",replace
 
 
 *==========================================================================================================================================================*    
@@ -187,26 +191,26 @@ save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_
 *--------------------------*
 *merge CT and BG level data.
 *--------------------------*
-use "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group.dta",clear
-merge m:1 uid using "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015CTb_race.dta" // many to one merge
+use "${directory}\intermediate\ACS2011_2015Block_Group.dta",clear
+merge m:1 uid using "${directory}\intermediate\ACS2011_2015CTb_race.dta" // many to one merge
 *using probability density (share) of families by race and by poverty status from CT, calcaulte counts of families by binary-poverty by race at the BG level.
 forval i=1/6{
-	gen bg_u5YesPovBelow_race`i'=bg_u5YesPovBelow_all*ct_s_u5povbelow_race`i'
-	gen bg_u5YesPovAbove_race`i'=bg_u5YesPovAbove_all*ct_s_u5povabove_race`i'
+  gen bg_u5YesPovBelow_race`i'=bg_u5YesPovBelow_all*ct_s_u5povbelow_race`i'
+  gen bg_u5YesPovAbove_race`i'=bg_u5YesPovAbove_all*ct_s_u5povabove_race`i'
 }
 *using probability density (share) of families by race and by categorical-poverty status from CT, calcaulte counts of families by categorical-poverty status by race at the BG level.
 forval i=1/6{
-	forval j=1/3{
-		gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovBelow_race`i'*ct_s_pov`j'_race
-	}
+  forval j=1/3{
+    gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovBelow_race`i'*ct_s_pov`j'_race
+  }
 }
 forval i=1/6{
-	forval j=4/12{
-		gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovAbove_race`i'*ct_s_pov`j'_race
-	}
+  forval j=4/12{
+    gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovAbove_race`i'*ct_s_pov`j'_race
+  }
 }
 keep bg_fam_u5_pov*_race* uid ct_gisjoin ct_year ct_state ct_county ct_tracta bg_gisjoin bg_county bg_tracta bg_tracta_s bg_total_families_u5
-save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group_CensusTract.dta",replace
+save "${directory}\intermediate\ACS2011_2015Block_Group_CensusTract.dta",replace
 
 *================================================================================*    
 *Step 4: using block level Census data, calculate joint density of family by race*
@@ -214,35 +218,35 @@ save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_
 *--------------------------*
 *merge CT and BG level data.
 *--------------------------*
-use "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group.dta",clear
-merge m:1 uid using "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015CTb_race.dta" // many to one merge
+use "${directory}\intermediate\ACS2011_2015Block_Group.dta",clear
+merge m:1 uid using "${directory}\intermediate\ACS2011_2015CTb_race.dta" // many to one merge
 *using probability density (share) of families by race and by poverty status from CT, calcaulte counts of families by binary-poverty by race at the BG level.
 forval i=1/6{
-	gen bg_u5YesPovBelow_race`i'=bg_u5YesPovBelow_all*ct_s_u5povbelow_race`i'
-	gen bg_u5YesPovAbove_race`i'=bg_u5YesPovAbove_all*ct_s_u5povabove_race`i'
+  gen bg_u5YesPovBelow_race`i'=bg_u5YesPovBelow_all*ct_s_u5povbelow_race`i'
+  gen bg_u5YesPovAbove_race`i'=bg_u5YesPovAbove_all*ct_s_u5povabove_race`i'
 }
 *using probability density (share) of families by race and by categorical-poverty status from CT, calcaulte counts of families by categorical-poverty status by race at the BG level.
 forval i=1/6{
-	forval j=1/3{
-		gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovBelow_race`i'*ct_s_pov`j'_race
-	}
+  forval j=1/3{
+    gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovBelow_race`i'*ct_s_pov`j'_race
+  }
 }
 forval i=1/6{
-	forval j=4/12{
-		gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovAbove_race`i'*ct_s_pov`j'_race
-	}
+  forval j=4/12{
+    gen bg_fam_u5_pov`j'_race`i'=bg_u5YesPovAbove_race`i'*ct_s_pov`j'_race
+  }
 }
 keep bg_fam_u5_pov*_race* uid ct_gisjoin ct_year ct_state ct_county ct_tracta bg_gisjoin bg_county bg_tracta bg_tracta_s bg_total_families_u5
-save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group_CensusTract.dta",replace
+save "${directory}\intermediate\ACS2011_2015Block_Group_CensusTract.dta",replace
 
 *================================================================================*    
 *Step 4: using block level Census data, calculate joint density of family by race*
 *================================================================================*   
 
-import delimited "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\nhgis0103_ds172_2010_block.csv", clear
+import delimited "${directory}\nhgis0103_ds172_2010_block.csv", clear
 drop if statea !=27
 rename gisjoin b_gisjoin
-merge m:1 b_gisjoin using "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\MN_2010_Block_BG_CT_County.dta" //this is block-level data that contains unique ids on block, BG, CT and County.
+merge m:1 b_gisjoin using "${directory}\MN_2010_Block_BG_CT_County.dta" //this is block-level data that contains unique ids on block, BG, CT and County.
 keep if _merge==3
 drop _merge 
 
@@ -258,10 +262,10 @@ egen total_families_u6=rowtotal(total_families_u6_r1 total_families_u6_r2 total_
 
 egen grand_total_families_u6=total(total_families_u6)
 foreach v in total_families_u6_r1 total_families_u6_r2 total_families_u6_r3 total_families_u6_r4 total_families_u6_r5 total_families_u6_r6{
-	egen bg_`v'=total(`v'),by(bg_gisjoin)
+  egen bg_`v'=total(`v'),by(bg_gisjoin)
 }
 foreach v in total_families_u6_r1 total_families_u6_r2 total_families_u6_r3 total_families_u6_r4 total_families_u6_r5 total_families_u6_r6{
- 	gen s_b_`v'=`v'/bg_`v' //block level share of families with young children by race.
+  gen s_b_`v'=`v'/bg_`v' //block level share of families with young children by race.
 }
 *block level count of total families by race
 gen tot_pop_b_r1=icr001
@@ -271,16 +275,16 @@ gen tot_pop_b_r4=icl001
 gen tot_pop_b_r5=icm001
 gen tot_pop_b_r6=icn001+ico001+icp001
 forval i=1/6{
-	gen total_families_NOu6_r`i'=tot_pop_b_r`i'-total_families_u6_r`i' //*block level count of families without child u6 by race
+  gen total_families_NOu6_r`i'=tot_pop_b_r`i'-total_families_u6_r`i' //*block level count of families without child u6 by race
 }
  
 keep b_gisjoin year state county blkgrpa ttracta name s_b_*
 foreach var of varlist _all{
-	rename `var' b_`var' //add b_ prefix to all variables to indicate that it comes from block level data.
+  rename `var' b_`var' //add b_ prefix to all variables to indicate that it comes from block level data.
 
 }
 rename b_b_gisjoin b_gisjoin // unique identifier
-save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2010_block_race.dta",replace 
+save "${directory}\intermediate\ACS2010_block_race.dta",replace 
 *====================================================================================================================================================*    
 *Step 5: Combine data created in steps 3 and 4, and calculate joint density of family by categorical-poverty status, by race, down to the block level*
 *====================================================================================================================================================*    
@@ -289,31 +293,31 @@ save "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2010_block_race
 *merge B and BG and CT level data.
 *--------------------------------*
 
-use "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2010_block_race.dta",clear
+use "${directory}\intermediate\ACS2010_block_race.dta",clear
  
-merge m:1 b_gisjoin using "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\MN_2010_Block_BG_CT_County.dta" //this is block-level data that contains unique ids on block, BG, CT and County.
+merge m:1 b_gisjoin using "${directory}\MN_2010_Block_BG_CT_County.dta" //this is block-level data that contains unique ids on block, BG, CT and County.
 keep if _merge==3
 drop _merge
-merge m:1 bg_gisjoin using "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\ACS2011_2015Block_Group_CensusTract.dta"
+merge m:1 bg_gisjoin using "${directory}\intermediate\ACS2011_2015Block_Group_CensusTract.dta"
 keep if _merge==3
 drop _merge
 
 forval i=1/6{
-	forval j=1/12{
-		gen b_fam_u5_pov`j'_race`i'=b_s_b_total_families_u6_r`i'*bg_fam_u5_pov`j'_race`i' // calculate block level joint probabbilty by categorical-poverty, by race.
-	}
+  forval j=1/12{
+    gen b_fam_u5_pov`j'_race`i'=b_s_b_total_families_u6_r`i'*bg_fam_u5_pov`j'_race`i' // calculate block level joint probabbilty by categorical-poverty, by race.
+  }
 }
 
 keep b_gisjoin b_fam_u5_pov*_race* //just keep the block-level unique identifier and counts of families under age 5 by poverty, by income.
 order b_gisjoin,last
 foreach v of  varlist *{
-	capture confirm numeric variable `v'
-		if !_rc {
-			replace `v'=0 if `v'==. // replace missing with 0
-		}
-		else{
-			continue
-		}
+  capture confirm numeric variable `v'
+    if !_rc {
+      replace `v'=0 if `v'==. // replace missing with 0
+    }
+    else{
+      continue
+    }
 }
 
 reshape long b_fam_,i(b_gisjoin) j(kjs) string //reshape the data to long format.
@@ -326,35 +330,35 @@ gen pov=.
 gen race=.
 
 forval j=1/6{
-	forval i=1/12{
-		replace pov=`i' if kjs=="u5_pov`i'_race`j'"
-		replace race=`j' if kjs=="u5_pov`i'_race`j'"
-	}
+  forval i=1/12{
+    replace pov=`i' if kjs=="u5_pov`i'_race`j'"
+    replace race=`j' if kjs=="u5_pov`i'_race`j'"
+  }
 }
 
 
 gen c=1
 forval i=1/12{
-	forval j=1/6{
-		egen p`i'_r`j'=total(c) if pov==`i'&race==`j',by(b_gisjoin)
-	}
+  forval j=1/6{
+    egen p`i'_r`j'=total(c) if pov==`i'&race==`j',by(b_gisjoin)
+  }
 }
 
 collapse p*_r*, by( b_gisjoin)
 order b_gisjoin,last
  
 foreach v of  varlist *{
-	capture confirm numeric variable `v'
-		if !_rc {
-			replace `v'=0 if `v'==. // replace missing with 0
-		}
-		else{
-			continue
-		}
+  capture confirm numeric variable `v'
+    if !_rc {
+      replace `v'=0 if `v'==. // replace missing with 0
+    }
+    else{
+      continue
+    }
 }
 
-save  "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\synth_HH_25pct_sample_block_level.dta",replace 
-export delimited using  "G:\My Drive\MinnCCAccess\Analysis\PDG\Data\intermediate\synth_HH_25pct_sample_block_level.csv", replace
+save  "${directory}\intermediate\synth_HH_25pct_sample_block_level.dta",replace 
+export delimited using  "${directory}\intermediate\synth_HH_25pct_sample_block_level.csv", replace
 
 
 *======*    
