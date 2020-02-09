@@ -16,7 +16,7 @@ Using the density information, each synthetic family points can have race and in
 variables of your interest from ACS data).*/
 
 *define working directory 
-global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\
+global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\ // set your own working directory.
 
 
 clear all

@@ -7,19 +7,23 @@ step 1. Calculate provider-household pair within 30 (or X miles depending on you
 *Export the neartables in step 1, in addition to the family and Provider geocodes (with unique ids) file as csv format.
 
 step 2. open csv files in step 1 in Stata and modify the data structure for the osrmtime (you can also use any preferred software to calculate driving time from point x to y, osrmtime is convenient because it doesn’t have the query limit like google map).
+
 step 3. process osrmtime (calculate driving time between point x to y).
+
 step 4. Analysis using the post-osrmtime file.
-a.  With the file produced from step 11, you can limit the providers within x minutes of driving time radius for each synthetic family i. 
+a.  With the file produced from step 3, you can limit the providers within x minutes of driving time radius for each synthetic family i. 
 b.  2-stage catchment area method (demand-adjusted supply) is calculates as follows:
+
 1.  Count number of families within x minutes of driving time radius for each provider j.
 2.  Divide the capacity of provider j by the total number of families located within x min of provider j (this is termed capacity-to-population ratio)
 3.  Sum up all the capacity-to-population ratios, for all provider j within the x minutes of driving time radius for each family i (This is the demand-adjusted supply).
+
 *You can also apply distance decay weights to discount capacity of providers that are further away from family i.   
 *You can calculate demand-adjusted supply for certain types or rating levels as need for the study objective.
 */
 
 *define working directory 
-global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\
+global directory G:\My Drive\MinnCCAccess\Analysis\PDG\Data\ // set your own working directory.
 
 *===================*    
 *Pre-processing data*
