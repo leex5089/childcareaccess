@@ -47,14 +47,14 @@ egen u5YesPovBelow_race2=rowtotal(ad1ye005   ad1ye012   ad1ye018  ad1ye006   ad1
 **above poverty
 egen u5YesPovAbove_race2=rowtotal(ad1ye025   ad1ye032   ad1ye038 ad1ye026   ad1ye033   ad1ye039)
 
-*Hispanic ALONE( Poverty Status in the Past 12 Months of Families by Family Type by Presence of Related Children Under 18 Years by Age of Related Children (Black or African American Alone Householder)
+*Hispanic ALONE( Poverty Status in the Past 12 Months of Families by Family Type by Presence of Related Children Under 18 Years by Age of Related Children (Hispanic Alone Householder)
 *under 5
 **below poverty
 egen u5YesPovBelow_race3=rowtotal(ad15e005   ad15e012   ad15e018 ad15e006   ad15e013   ad15e019)
 **above poverty
 egen u5YesPovAbove_race3=rowtotal(ad15e025   ad15e032   ad15e038 ad15e026   ad15e033   ad15e039)
 
-*Aindian ALONE( Poverty Status in the Past 12 Months of Families by Family Type by Presence of Related Children Under 18 Years by Age of Related Children (Black or African American Alone Householder)
+*Aindian ALONE( Poverty Status in the Past 12 Months of Families by Family Type by Presence of Related Children Under 18 Years by Age of Related Children (Native American Alone Householder)
 *under 5
 **below poverty
 egen u5YesPovBelow_race4=rowtotal(ad1ze005   ad1ze012   ad1ze018  ad1ze006   ad1ze013   ad1ze019)
@@ -238,10 +238,7 @@ forval i=1/6{
 }
 keep bg_fam_u5_pov*_race* uid ct_gisjoin ct_year ct_state ct_county ct_tracta bg_gisjoin bg_county bg_tracta bg_tracta_s bg_total_families_u5
 save "${directory}\intermediate\ACS2011_2015Block_Group_CensusTract.dta",replace
-
-*================================================================================*    
-*Step 4: using block level Census data, calculate joint density of family by race*
-*================================================================================*   
+ 
 
 import delimited "${directory}\nhgis0103_ds172_2010_block.csv", clear
 drop if statea !=27
